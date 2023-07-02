@@ -19,7 +19,6 @@ def generate_code(length):
             break
     return code
 
-
 @app.route("/", methods=["POST", "GET"])
 def home():
     session.clear()
@@ -28,32 +27,39 @@ def home():
         code = request.form.get("code")
         join = request.form.get("join", False)
         create = request.form.get("create", False)
+
         if not name:
             return render_template("home.html", error="Please enter a name.", code=code, name=name)
-        if join and not code:
+
+        if join != False and not code:
             return render_template("home.html", error="Please enter a room code.", code=code, name=name)
+        
         room = code
-        if create:
+        if create != False:
             room = generate_code(4)
             rooms[room] = {"members": 0, "messages": []}
         elif code not in rooms:
             return render_template("home.html", error="Room does not exist.", code=code, name=name)
+        
         session["room"] = room
         session["name"] = name
         return redirect(url_for("room"))
+
     return render_template("home.html")
+
 
 
 @app.route("/room")
 def room():
     room = session.get("room")
-    if not all([room, session.get("name"), room in rooms]):
+    if room is None or session.get("name") is None or room not in rooms:
         return redirect(url_for("home"))
+
     return render_template("room.html", code=room, messages=rooms[room]["messages"])
 
 
 @socketio.on("message")
-def handle_message(data):
+def manage_message(data):
     room = session.get("room")
     if room not in rooms:
         return
@@ -65,7 +71,7 @@ def handle_message(data):
 
 
 @socketio.on("connect")
-def handle_connect(auth):
+def manage_connect(auth):
     room = session.get("room")
     name = session.get("name")
     if not all([room, name]):
@@ -80,7 +86,7 @@ def handle_connect(auth):
 
 
 @socketio.on("disconnect")
-def handle_disconnect():
+def manage_disconnect():
     room = session.get("room")
     name = session.get("name")
     leave_room(room)
