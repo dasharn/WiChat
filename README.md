@@ -1,4 +1,4 @@
-# Flask Chat Application
+# Online Chat Application
 
 This is a simple chat application built using Flask and Flask-SocketIO. It allows users to join existing chat rooms or create new ones and engage in real-time messaging with other participants in the same room.
 
