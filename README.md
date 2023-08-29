@@ -2,6 +2,9 @@
 
 This is a simple chat application built using Flask and Flask-SocketIO. It allows users to join existing chat rooms or create new ones and engage in real-time messaging with other participants in the same room.
 
+https://github.com/Dasharn/WiChat/assets/112700137/fd951d1f-b3f2-40f4-b0b3-693f6e5e1234
+
+
 ## Features
 
 - Users can enter their name and choose to join an existing chat room or create a new one.
